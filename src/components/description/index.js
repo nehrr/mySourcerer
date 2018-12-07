@@ -5,14 +5,6 @@ import Repository from "../repository";
 import { GET_DATA, GET_REPO } from "./query";
 
 let repos = [];
-let areReposLoaded = false;
-const _loopRepos = repos => {
-  // if (areReposLoaded) {
-  repos.map(el => {
-    return <Repository name={el} />;
-  });
-  // }
-};
 
 export default ({ variables }) => {
   const { nb } = variables;

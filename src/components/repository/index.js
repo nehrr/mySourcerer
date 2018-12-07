@@ -15,7 +15,6 @@ export default ({ variables }) => {
         if (data) {
           const { repository } = data.viewer;
           if (repository) {
-            console.log(repository);
             const { name, description, resourcePath, isPrivate } = repository;
             return (
               <h4>

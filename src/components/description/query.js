@@ -28,14 +28,19 @@ export const GET_DATA = gql`
 export const GET_REPO = gql`
   query($nb: Int!) {
     viewer {
-      repositories(first: $nb) {
+      repositories(
+        first: $nb
+        orderBy: { field: CREATED_AT, direction: DESC }
+      ) {
         nodes {
           name
-          nameWithOwner
           defaultBranchRef {
             target {
               ... on Commit {
                 history {
+                  nodes {
+                    authoredDate
+                  }
                   totalCount
                 }
               }

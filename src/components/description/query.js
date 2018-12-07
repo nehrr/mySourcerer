@@ -3,11 +3,14 @@ import gql from "graphql-tag";
 export const GET_DATA = gql`
   query($nb: Int!) {
     viewer {
-      avatarUrl
+      avatarUrl(size: 250)
       login
       name
       bio
       location
+      repositories(first: $nb, ownerAffiliations: OWNER) {
+        totalCount
+      }
       followers(first: $nb) {
         nodes {
           login

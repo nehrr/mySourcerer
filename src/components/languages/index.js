@@ -28,8 +28,6 @@ export default ({ variables }) => {
             return languagesList;
           });
 
-          console.log(languagesList);
-
           return (
             <>
               {languagesList.map((el, idx) => {

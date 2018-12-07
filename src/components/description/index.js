@@ -1,10 +1,22 @@
 import React from "react";
 import { Query } from "react-apollo";
 import { Spinner } from "evergreen-ui";
+import Repository from "../repository";
 import { GET_DATA, GET_REPO } from "./query";
+
+let repos = [];
+let areReposLoaded = false;
+const _loopRepos = repos => {
+  // if (areReposLoaded) {
+  repos.map(el => {
+    return <Repository name={el} />;
+  });
+  // }
+};
 
 export default ({ variables }) => {
   const { nb } = variables;
+
   return (
     <>
       <Query query={GET_DATA} variables={{ nb }}>
@@ -17,6 +29,7 @@ export default ({ variables }) => {
             const followers = data.viewer.followers.nodes;
             const following = data.viewer.following.nodes;
             const nbRepos = data.viewer.repositories.totalCount;
+            const repositories = data.viewer.repositories.nodes;
 
             const nbFollowers = Object.keys(followers).length;
             const nbFollowing = Object.keys(following).length;
@@ -48,16 +61,22 @@ export default ({ variables }) => {
             let nbCommit = 0;
             const repositories = data.viewer.repositories.nodes;
 
-            repositories.map(el => {
+            repositories.map((el, idx) => {
+              const { name } = el;
+              if (!repos.includes(name)) {
+                repos.push(<Repository key={idx} variables={{ name, idx }} />);
+              }
               if (el.defaultBranchRef) {
                 const commits = el.defaultBranchRef.target.history.totalCount;
                 nbCommit += commits;
               }
               return nbCommit;
             });
+
             return (
               <>
                 <div>Commits: {nbCommit}</div>
+                {repos}
               </>
             );
           }

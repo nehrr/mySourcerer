@@ -8,7 +8,7 @@ export const GET_DATA = gql`
       name
       bio
       location
-      repositories(first: $nb, ownerAffiliations: OWNER) {
+      repositories(ownerAffiliations: OWNER) {
         totalCount
       }
       followers(first: $nb) {
@@ -30,6 +30,7 @@ export const GET_REPO = gql`
     viewer {
       repositories(first: $nb) {
         nodes {
+          name
           nameWithOwner
           defaultBranchRef {
             target {

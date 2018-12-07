@@ -14,8 +14,15 @@ export default ({ variables }) => {
 
         if (data) {
           const { repository } = data.viewer;
+          let totalCount;
           if (repository) {
             const { name, description, resourcePath, isPrivate } = repository;
+            if (repository.defaultBranchRef) {
+              // console.log(repository.defaultBranchRef.target.history);
+
+              totalCount =
+                repository.defaultBranchRef.target.history.totalCount;
+            }
             return (
               <h4>
                 <span>👻</span>
@@ -26,6 +33,8 @@ export default ({ variables }) => {
                 <br />
                 <span>🌑 </span>
                 {resourcePath}
+                <br />
+                Commits: {totalCount ? totalCount : 0}
                 <br />
                 {!isPrivate ? (
                   <>

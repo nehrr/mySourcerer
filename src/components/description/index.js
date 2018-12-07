@@ -55,8 +55,8 @@ export default ({ variables }) => {
 
             repositories.map((el, idx) => {
               const { name } = el;
-              if (!repos.includes(name)) {
-                repos.push(<Repository key={idx} variables={{ name, idx }} />);
+              if (!repos.includes(name) && repos.length <= 10) {
+                repos.push(<Repository key={idx} variables={{ name, nb }} />);
               }
               if (el.defaultBranchRef) {
                 const commits = el.defaultBranchRef.target.history.totalCount;

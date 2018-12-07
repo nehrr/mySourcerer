@@ -5,6 +5,7 @@ import { GET_LANGUAGES } from "./query";
 
 export default ({ variables }) => {
   const { nb } = variables;
+  //commits by language = nb of commits in a repo * each language
 
   return (
     <Query query={GET_LANGUAGES} variables={{ nb }}>

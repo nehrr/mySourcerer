@@ -2,6 +2,7 @@ import React from "react";
 import { Query } from "react-apollo";
 import { Spinner } from "evergreen-ui";
 import Repository from "../repository";
+import moment from "moment";
 import { GET_DATA, GET_REPO } from "./query";
 
 let repos = [];
@@ -34,9 +35,9 @@ export default ({ variables }) => {
                   if (data) {
                     let nbCommit = 0;
                     const repositories = data.viewer.repositories.nodes;
-                    const latestCommit =
-                      data.viewer.repositories.nodes[0].defaultBranchRef.target
-                        .history.nodes[0].authoredDate;
+                    let latestCommit = moment(
+                      data.viewer.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
+                    ).format("LLL");
 
                     repositories.map((el, idx) => {
                       const { name } = el;
@@ -80,44 +81,6 @@ export default ({ variables }) => {
           return <></>;
         }}
       </Query>
-
-      {/* <Query query={GET_REPO} variables={{ nb }}>
-        {({ loading, error, data }) => {
-          if (loading) {
-            return <Spinner />;
-          }
-          if (data) {
-            let nbCommit = 0;
-            const repositories = data.viewer.repositories.nodes;
-            const latestCommit =
-              data.viewer.repositories.nodes[0].defaultBranchRef.target.history
-                .nodes[0].authoredDate;
-            console.log(latestCommit);
-
-            repositories.map((el, idx) => {
-              const { name } = el;
-              if (!repos.includes(name) && repos.length <= 10) {
-                repos.push(<Repository key={idx} variables={{ name, nb }} />);
-              }
-              if (el.defaultBranchRef) {
-                const commits = el.defaultBranchRef.target.history.totalCount;
-                nbCommit += commits;
-              }
-              return nbCommit;
-            });
-
-            return (
-              <>
-                <div>
-                  Commits: {nbCommit} || Latest commit: {latestCommit}
-                </div>
-                {repos}
-              </>
-            );
-          }
-          return <></>;
-        }}
-      </Query> */}
     </>
   );
 };

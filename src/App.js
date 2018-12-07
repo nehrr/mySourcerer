@@ -1,48 +1,23 @@
 import React, { Component } from "react";
 import ApolloClient from "apollo-boost";
-import { ApolloProvider, Query } from "react-apollo";
-import gql from "graphql-tag";
+import { ApolloProvider } from "react-apollo";
+import Description from "./components/description/";
 
 import logo from "./ch0pper.png";
 import "./App.css";
-const token = "a0b5bf78faa9aa31e666a23a99ab1ed838605894";
 
 const client = new ApolloClient({
-  uri: "https://api.github.com/graphql"
-});
-
-// client.query({
-//   query: gql`
-//     query {
-//       hello
-//     }
-//   `
-// }).then(result => console.log(result))
-
-const PingServer = () => (
-  <Query
-    query={gql`
-      query {
-        viewer {
-          login
-        }
-      }
-    `}
-    context={{
+  uri: "https://api.github.com/graphql",
+  request: operation => {
+    const { REACT_APP_TOKEN } = process.env;
+    operation.setContext(context => ({
       headers: {
-        authorization: "Bearer " + token
+        ...context.headers,
+        authorization: `Bearer ${REACT_APP_TOKEN}`
       }
-    }}
-  >
-    {({ loading, error, data }) => {
-      console.log(data);
-      if (loading) {
-        return <span>WAIT</span>;
-      }
-      return <h1>Data</h1>;
-    }}
-  </Query>
-);
+    }));
+  }
+});
 
 class App extends Component {
   render() {
@@ -51,7 +26,7 @@ class App extends Component {
         <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
-            <PingServer />
+            <Description variables={{ nb: 100 }} />
           </header>
         </div>
       </ApolloProvider>

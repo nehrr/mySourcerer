@@ -28,12 +28,10 @@ export default ({ variables, key }) => {
               <>
                 <Table.Row key={idx}>
                   <Table.TextCell>
-                    {" "}
                     <span>👻</span>
                     {name}
                   </Table.TextCell>
                   <Table.TextCell>
-                    {" "}
                     <span>👾 </span>
                     {description ? description : "N/A"}
                   </Table.TextCell>
@@ -42,11 +40,9 @@ export default ({ variables, key }) => {
                     {resourcePath}
                   </Table.TextCell>
                   <Table.TextCell>
-                    {" "}
                     Commits: {totalCount ? totalCount : 0}
                   </Table.TextCell>
                   <Table.TextCell>
-                    {" "}
                     {!isPrivate ? (
                       <>
                         <span>✔️</span> Public
@@ -58,36 +54,11 @@ export default ({ variables, key }) => {
                     )}
                   </Table.TextCell>
                   <Table.TextCell>
-                    {" "}
                     {languages.map(el => {
                       return <>{el.name} </>;
-                    })}{" "}
+                    })}
                   </Table.TextCell>
                 </Table.Row>
-                {/* <span>👻</span>
-                {name}
-                <br />
-                <span>👾 </span>
-                {description ? description : "N/A"}
-                <br />
-                <span>🌑 </span>
-                {resourcePath}
-                <br />
-                Commits: {totalCount ? totalCount : 0}
-                <br />
-                {!isPrivate ? (
-                  <>
-                    <span>✔️</span> Public
-                  </>
-                ) : (
-                  <>
-                    <span>🚫</span>Private
-                  </>
-                )}
-                <br />
-                {languages.map(el => {
-                  return <h8>{el.name} </h8>;
-                })} */}
               </>
             );
           }

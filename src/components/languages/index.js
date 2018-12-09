@@ -5,6 +5,20 @@ import { Query } from "react-apollo";
 import { Spinner, Pane } from "evergreen-ui";
 import { GET_LANGUAGES } from "./query";
 
+const backgroundColor = [
+  "#004c6d",
+  "#255e7e",
+  "#3d708f",
+  "#5383a1",
+  "#6996b3",
+  "#7faac6",
+  "#94bed9",
+  "#abd2ec",
+  "#c1e7ff",
+  "#c4eaff"
+];
+let idx = 0;
+
 export default ({ variables }) => {
   const { nb } = variables;
 
@@ -43,6 +57,7 @@ export default ({ variables }) => {
             if (languagesData.hasOwnProperty(language)) {
               if (sortedData.length < 9) {
                 sortedData.push([language, languagesData[language]]);
+                idx++;
               }
             }
           }
@@ -50,6 +65,11 @@ export default ({ variables }) => {
           sortedData.sort((a, b) => {
             return b[1] - a[1];
           });
+
+          for (let i = 0; i < sortedData.length; i++) {
+            sortedData[i][2] = backgroundColor[i];
+            idx++;
+          }
 
           for (const languageData of sortedData) {
             labels.push(languageData[0]);
@@ -61,24 +81,18 @@ export default ({ variables }) => {
             datasets: [
               {
                 data: dataAll,
-                backgroundColor: [
-                  "#004c6d",
-                  "#255e7e",
-                  "#3d708f",
-                  "#5383a1",
-                  "#6996b3",
-                  "#7faac6",
-                  "#94bed9",
-                  "#abd2ec",
-                  "#c1e7ff",
-                  "#c4eaff"
-                ]
+                backgroundColor
               }
             ]
           };
 
           return (
-            <Pane flexDirection="column">
+            <Pane
+              flexDirection="column"
+              background="tint1"
+              border="muted"
+              marginBottom={24}
+            >
               <Pane
                 float="left"
                 width={300}
@@ -89,23 +103,31 @@ export default ({ variables }) => {
                   return (
                     <Pane
                       is="section"
-                      background="tint2"
+                      backgroundColor={el[2]}
                       border="muted"
                       width={90}
                       height={90}
                       float="left"
                       margin={5}
+                      padding={5}
                       flexDirection="row"
                     >
-                      {/* <div key={idx}> */}
-                      {el[0]} <br /> {el[1]}
-                      {/* </div> */}
+                      <p
+                        style={{
+                          fontSize: "10px",
+                          align: "center",
+                          position: "relative"
+                        }}
+                      >
+                        {el[0]} <br /> {el[1]} commits <br /> LOC
+                      </p>
                     </Pane>
                   );
                 })}
               </Pane>
-              <Pane float="right" width={500}>
-                <Pie data={dataPie} />
+              <Pane float="right" width={500} marginBottom={24}>
+                <Pie data={dataPie} legend={{ display: false }} />
+                <br />
                 Lastest commit: {latestCommit}
               </Pane>
             </Pane>

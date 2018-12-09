@@ -63,7 +63,7 @@ export default ({ variables }) => {
                             display="flex"
                             flexDirection="row"
                             float="left"
-                            margin={24}
+                            marginBottom={24}
                             background="tint1"
                             border="muted"
                             width={800}
@@ -85,7 +85,12 @@ export default ({ variables }) => {
                             Commits: {nbCommit} || Latest commit: {latestCommit}
                           </Pane>
                         </Pane>
-                        <Pane background="tint1" border="muted" width={800}>
+                        <Pane
+                          background="tint1"
+                          border="muted"
+                          width={800}
+                          marginBottom={24}
+                        >
                           <Table>
                             <Table.Head>
                               <Table.TextHeaderCell>

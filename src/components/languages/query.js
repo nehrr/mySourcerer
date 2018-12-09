@@ -6,6 +6,15 @@ export const GET_LANGUAGES = gql`
       repositories(last: $nb) {
         nodes {
           name
+          defaultBranchRef {
+            target {
+              ... on Commit {
+                history {
+                  totalCount
+                }
+              }
+            }
+          }
           languages(first: $nb) {
             nodes {
               name

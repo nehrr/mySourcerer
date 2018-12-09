@@ -15,24 +15,42 @@ export default ({ variables }) => {
         }
 
         if (data) {
-          let languagesList = [];
+          let languagesData = {};
+          let sortedData = [];
           const repositories = data.viewer.repositories.nodes;
 
           repositories.map(el => {
             const languages = el.languages.nodes;
+            const commits = el.defaultBranchRef.target.history.totalCount;
+
             languages.map(el => {
               const { name } = el;
-              if (!languagesList.includes(name)) {
-                languagesList.push(name);
-              }
+              languagesData[name]
+                ? (languagesData[name] += commits)
+                : (languagesData[name] = commits);
             });
-            return languagesList;
+
+            return languagesData;
+          });
+
+          for (var language in languagesData) {
+            if (languagesData.hasOwnProperty(language)) {
+              sortedData.push([language, languagesData[language]]);
+            }
+          }
+
+          sortedData.sort((a, b) => {
+            return b[1] - a[1];
           });
 
           return (
             <>
-              {languagesList.map((el, idx) => {
-                return <div key={idx}>{el}</div>;
+              {sortedData.map((el, idx) => {
+                return (
+                  <div key={idx}>
+                    {el[0]} || {el[1]}
+                  </div>
+                );
               })}
             </>
           );

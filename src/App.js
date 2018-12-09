@@ -3,6 +3,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import Description from "./components/description/";
 import Languages from "./components/languages/";
+import Overview from "./components/overview/";
 
 import logo from "./ch0pper.png";
 import "./App.css";
@@ -29,6 +30,7 @@ class App extends Component {
             <img src={logo} className="App-logo" alt="logo" />
             <Description variables={{ nb: 100 }} />
             <Languages variables={{ nb: 100 }} />
+            <Overview variables={{ nb: 100 }} />
           </header>
         </div>
       </ApolloProvider>

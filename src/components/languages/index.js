@@ -58,7 +58,19 @@ export default ({ variables }) => {
             labels,
             datasets: [
               {
-                data: dataAll
+                data: dataAll,
+                backgroundColor: [
+                  "#004c6d",
+                  "#255e7e",
+                  "#3d708f",
+                  "#5383a1",
+                  "#6996b3",
+                  "#7faac6",
+                  "#94bed9",
+                  "#abd2ec",
+                  "#c1e7ff",
+                  "#c4eaff"
+                ]
               }
             ]
           };

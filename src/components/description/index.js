@@ -1,6 +1,6 @@
 import React from "react";
 import { Query } from "react-apollo";
-import { Spinner, Avatar, Pane, Table } from "evergreen-ui";
+import { Spinner, Avatar, Pane, Table, Heading } from "evergreen-ui";
 import Repository from "../repository";
 import moment from "moment";
 import { GET_DATA, GET_REPO } from "./query";
@@ -58,6 +58,7 @@ export default ({ variables }) => {
 
                     return (
                       <>
+                        <Heading size={900}>Who?</Heading>
                         <Pane justifyContent="center" alignItems="center">
                           <Pane
                             display="flex"
@@ -69,6 +70,7 @@ export default ({ variables }) => {
                             width={800}
                             justifyContent="center"
                             alignItems="center"
+                            style={{ fontSize: "12px" }}
                           >
                             <Avatar
                               size={100}
@@ -85,6 +87,7 @@ export default ({ variables }) => {
                             Commits: {nbCommit} || Latest commit: {latestCommit}
                           </Pane>
                         </Pane>
+                        <Heading size={900}>What?</Heading>
                         <Pane
                           background="tint1"
                           border="muted"

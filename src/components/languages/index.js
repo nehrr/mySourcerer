@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import { Pie } from "react-chartjs-2";
 import { Query } from "react-apollo";
-import { Spinner, Pane } from "evergreen-ui";
+import { Spinner, Pane, Heading } from "evergreen-ui";
 import { GET_LANGUAGES } from "./query";
 
 const backgroundColor = [
@@ -87,50 +87,53 @@ export default ({ variables }) => {
           };
 
           return (
-            <Pane
-              flexDirection="column"
-              background="tint1"
-              border="muted"
-              marginBottom={24}
-            >
+            <>
+              <Heading size={900}>Which?</Heading>
               <Pane
-                float="left"
-                width={300}
-                justifyContent="center"
-                alignItems="center"
+                flexDirection="column"
+                background="tint1"
+                border="muted"
+                marginBottom={24}
               >
-                {sortedData.map((el, idx) => {
-                  return (
-                    <Pane
-                      is="section"
-                      backgroundColor={el[2]}
-                      border="muted"
-                      width={90}
-                      height={90}
-                      float="left"
-                      margin={5}
-                      padding={5}
-                      flexDirection="row"
-                    >
-                      <p
-                        style={{
-                          fontSize: "10px",
-                          align: "center",
-                          position: "relative"
-                        }}
+                <Pane
+                  float="left"
+                  width={300}
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  {sortedData.map((el, idx) => {
+                    return (
+                      <Pane
+                        is="section"
+                        backgroundColor={el[2]}
+                        border="muted"
+                        width={90}
+                        height={90}
+                        float="left"
+                        margin={5}
+                        padding={5}
+                        flexDirection="row"
                       >
-                        {el[0]} <br /> {el[1]} commits <br /> LOC
-                      </p>
-                    </Pane>
-                  );
-                })}
+                        <p
+                          style={{
+                            fontSize: "10px",
+                            align: "center",
+                            position: "relative"
+                          }}
+                        >
+                          {el[0]} <br /> {el[1]} commits <br /> LOC
+                        </p>
+                      </Pane>
+                    );
+                  })}
+                </Pane>
+                <Pane float="right" width={500} marginBottom={24}>
+                  <Pie data={dataPie} legend={{ display: false }} />
+                  <br />
+                  Lastest commit: {latestCommit}
+                </Pane>
               </Pane>
-              <Pane float="right" width={500} marginBottom={24}>
-                <Pie data={dataPie} legend={{ display: false }} />
-                <br />
-                Lastest commit: {latestCommit}
-              </Pane>
-            </Pane>
+            </>
           );
         }
 

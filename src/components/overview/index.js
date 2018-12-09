@@ -1,7 +1,7 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 import { Query } from "react-apollo";
-import { Spinner, Pane } from "evergreen-ui";
+import { Spinner, Pane, Heading } from "evergreen-ui";
 import { GET_OVERVIEW } from "./query";
 
 export default ({ variables }) => {
@@ -75,14 +75,17 @@ export default ({ variables }) => {
             };
 
             return (
-              <Pane
-                width={800}
-                background="tint1"
-                border="muted"
-                marginBottom={24}
-              >
-                <Line data={dataLine} />
-              </Pane>
+              <>
+                <Heading size={900}>When?</Heading>
+                <Pane
+                  width={800}
+                  background="tint1"
+                  border="muted"
+                  marginBottom={24}
+                >
+                  <Line data={dataLine} />
+                </Pane>
+              </>
             );
           }
           return null;

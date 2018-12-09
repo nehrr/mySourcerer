@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import { Pie } from "react-chartjs-2";
 import { Query } from "react-apollo";
-import { Spinner } from "evergreen-ui";
+import { Spinner, Pane } from "evergreen-ui";
 import { GET_LANGUAGES } from "./query";
 
 export default ({ variables }) => {
@@ -41,7 +41,9 @@ export default ({ variables }) => {
 
           for (var language in languagesData) {
             if (languagesData.hasOwnProperty(language)) {
-              sortedData.push([language, languagesData[language]]);
+              if (sortedData.length < 9) {
+                sortedData.push([language, languagesData[language]]);
+              }
             }
           }
 
@@ -76,17 +78,37 @@ export default ({ variables }) => {
           };
 
           return (
-            <>
-              {sortedData.map((el, idx) => {
-                return (
-                  <div key={idx}>
-                    {el[0]} || {el[1]}
-                  </div>
-                );
-              })}
-              <Pie data={dataPie} />
-              Lastest commit: {latestCommit}
-            </>
+            <Pane flexDirection="column">
+              <Pane
+                float="left"
+                width={300}
+                justifyContent="center"
+                alignItems="center"
+              >
+                {sortedData.map((el, idx) => {
+                  return (
+                    <Pane
+                      is="section"
+                      background="tint2"
+                      border="muted"
+                      width={90}
+                      height={90}
+                      float="left"
+                      margin={5}
+                      flexDirection="row"
+                    >
+                      {/* <div key={idx}> */}
+                      {el[0]} <br /> {el[1]}
+                      {/* </div> */}
+                    </Pane>
+                  );
+                })}
+              </Pane>
+              <Pane float="right" width={500}>
+                <Pie data={dataPie} />
+                Lastest commit: {latestCommit}
+              </Pane>
+            </Pane>
           );
         }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Query } from "react-apollo";
-import { Spinner } from "evergreen-ui";
+import { Spinner, Avatar, Pane } from "evergreen-ui";
 import Repository from "../repository";
 import moment from "moment";
 import { GET_DATA, GET_REPO } from "./query";
@@ -43,7 +43,9 @@ export default ({ variables }) => {
                       const { name } = el;
                       if (!repos.includes(name) && repos.length <= 10) {
                         repos.push(
-                          <Repository key={idx} variables={{ name, nb }} />
+                          <Pane background="tint1" border="muted">
+                            <Repository key={idx} variables={{ name, nb }} />
+                          </Pane>
                         );
                       }
                       if (el.defaultBranchRef) {
@@ -56,24 +58,40 @@ export default ({ variables }) => {
 
                     return (
                       <>
-                        <>
-                          <img src={avatarUrl} alt="avatar" />
-                          <h1>
-                            {login} {name} {bio} {location}
-                          </h1>
-                          <div>
+                        <Pane justifyContent="center" alignItems="center">
+                          <Pane
+                            display="flex"
+                            flexDirection="row"
+                            float="left"
+                            margin={24}
+                            background="tint1"
+                            border="muted"
+                            width={800}
+                            justifyContent="center"
+                            alignItems="center"
+                          >
+                            <Avatar
+                              size={100}
+                              shape="circle"
+                              src={avatarUrl}
+                              style={{ marginRight: 100 }}
+                            />
+                            {name} aka {login} <br />
+                            {bio} @ {location}
+                            <br />
                             Followers: {nbFollowers} || Following: {nbFollowing}
-                          </div>
-                        </>
-                        <div>
-                          Repositories: {nbRepos} || Commits: {nbCommit} ||
-                          Latest commit: {latestCommit}
-                        </div>
-                        {repos}
+                            <br />
+                            Repositories: {nbRepos} <br />
+                            Commits: {nbCommit} || Latest commit: {latestCommit}
+                          </Pane>
+                        </Pane>
+                        <Pane background="tint1" border="muted" width={800}>
+                          {repos}
+                        </Pane>
                       </>
                     );
                   }
-                  return <></>;
+                  return null;
                 }}
               </Query>
             );

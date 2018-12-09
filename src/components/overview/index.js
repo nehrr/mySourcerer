@@ -15,10 +15,10 @@ export default ({ variables }) => {
             return <Spinner />;
           }
           if (data) {
-            // console.log(data);
             let commitsRate = [];
             let commits = [];
-            let allCommits = [];
+            let dataAll = [];
+            let labels = [];
             const repositories = data.viewer.repositories.nodes;
 
             if (repositories) {
@@ -29,27 +29,52 @@ export default ({ variables }) => {
               });
             }
 
-            console.log(commits);
-
             commits.map(el => {
               if (el) {
                 el.map(el => {
-                  const date = el.authoredDate.substring(0, 10);
-                  // console.log(date);
+                  const date = el.authoredDate.substring(0, 7);
                   commitsRate[date]
                     ? (commitsRate[date] += 1)
                     : (commitsRate[date] = 1);
                 });
-                //   allCommits.push(el);
-                // }
-
-                // console.log(el[idx][idx].authoredDate);
               }
             });
 
-            console.log(commitsRate);
+            for (var date in commitsRate) {
+              if (commitsRate.hasOwnProperty(date)) {
+                labels.push(date);
+                dataAll.push(commitsRate[date]);
+              }
+            }
 
-            return <h1>Test</h1>;
+            const dataLine = {
+              labels,
+              datasets: [
+                {
+                  fill: false,
+                  label: "Commiting Rate",
+                  lineTension: 0.1,
+                  backgroundColor: "#255e7e",
+                  borderColor: "#7faac6",
+                  borderCapStyle: "butt",
+                  borderDash: [],
+                  borderDashOffset: 0.0,
+                  borderJoinStyle: "miter",
+                  pointBorderColor: "#7faac6",
+                  pointBackgroundColor: "#fff",
+                  pointBorderWidth: 1,
+                  pointHoverRadius: 5,
+                  pointHoverBackgroundColor: "#7faac6",
+                  pointHoverBorderColor: "rgba(220,220,220,1)",
+                  pointHoverBorderWidth: 2,
+                  pointRadius: 1,
+                  pointHitRadius: 10,
+                  data: dataAll
+                }
+              ]
+            };
+
+            return <Line data={dataLine} />;
           }
           return null;
         }}

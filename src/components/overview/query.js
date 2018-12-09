@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 export const GET_OVERVIEW = gql`
   query($nb: Int!) {
     viewer {
-      repositories(last: $nb, orderBy: { field: CREATED_AT, direction: DESC }) {
+      repositories(last: $nb, orderBy: { field: CREATED_AT, direction: ASC }) {
         nodes {
           name
           defaultBranchRef {

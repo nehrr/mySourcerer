@@ -5,12 +5,14 @@
   "dependencies": {
     "antd": "^3.11.0",
     "apollo-boost": "^0.1.22",
+    "chart.js": "^2.7.3",
     "evergreen-ui": "^4.8.0",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
     "moment": "^2.22.2",
     "react": "^16.6.3",
     "react-apollo": "^2.3.2",
+    "react-chartjs-2": "^2.7.4",
     "react-dom": "^16.6.3",
     "react-scripts": "2.1.1"
   },

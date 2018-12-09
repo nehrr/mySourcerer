@@ -22,7 +22,7 @@ export const GET_REPO_INFOS = gql`
               ... on Commit {
                 history {
                   nodes {
-                    committedDate
+                    authoredDate
                   }
                   totalCount
                 }

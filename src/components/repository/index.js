@@ -1,10 +1,11 @@
 import React from "react";
 import { Query } from "react-apollo";
-import { Spinner } from "evergreen-ui";
+import { Spinner, Table } from "evergreen-ui";
 import { GET_REPO_INFOS } from "./query";
 
-export default ({ variables }) => {
-  const { name, nb } = variables;
+export default ({ variables, key }) => {
+  const { name, nb, idx } = variables;
+
   return (
     <Query query={GET_REPO_INFOS} variables={{ name, nb }}>
       {({ loading, error, data }) => {
@@ -17,19 +18,57 @@ export default ({ variables }) => {
           let totalCount;
           if (repository) {
             const { name, description, resourcePath, isPrivate } = repository;
+            const languages = repository.languages.nodes;
             if (repository.defaultBranchRef) {
-              // console.log(repository.defaultBranchRef.target.history);
-
               totalCount =
                 repository.defaultBranchRef.target.history.totalCount;
             }
+
             return (
-              <h4>
-                <span>👻</span>
+              <>
+                <Table.Row key={idx}>
+                  <Table.TextCell>
+                    {" "}
+                    <span>👻</span>
+                    {name}
+                  </Table.TextCell>
+                  <Table.TextCell>
+                    {" "}
+                    <span>👾 </span>
+                    {description ? description : "N/A"}
+                  </Table.TextCell>
+                  <Table.TextCell>
+                    <span>🌑 </span>
+                    {resourcePath}
+                  </Table.TextCell>
+                  <Table.TextCell>
+                    {" "}
+                    Commits: {totalCount ? totalCount : 0}
+                  </Table.TextCell>
+                  <Table.TextCell>
+                    {" "}
+                    {!isPrivate ? (
+                      <>
+                        <span>✔️</span> Public
+                      </>
+                    ) : (
+                      <>
+                        <span>🚫</span>Private
+                      </>
+                    )}
+                  </Table.TextCell>
+                  <Table.TextCell>
+                    {" "}
+                    {languages.map(el => {
+                      return <>{el.name} </>;
+                    })}{" "}
+                  </Table.TextCell>
+                </Table.Row>
+                {/* <span>👻</span>
                 {name}
                 <br />
                 <span>👾 </span>
-                {description}
+                {description ? description : "N/A"}
                 <br />
                 <span>🌑 </span>
                 {resourcePath}
@@ -45,7 +84,11 @@ export default ({ variables }) => {
                     <span>🚫</span>Private
                   </>
                 )}
-              </h4>
+                <br />
+                {languages.map(el => {
+                  return <h8>{el.name} </h8>;
+                })} */}
+              </>
             );
           }
         }

@@ -1,6 +1,6 @@
 import React from "react";
 import { Query } from "react-apollo";
-import { Spinner, Avatar, Pane } from "evergreen-ui";
+import { Spinner, Avatar, Pane, Table } from "evergreen-ui";
 import Repository from "../repository";
 import moment from "moment";
 import { GET_DATA, GET_REPO } from "./query";
@@ -44,7 +44,7 @@ export default ({ variables }) => {
                       if (!repos.includes(name) && repos.length <= 10) {
                         repos.push(
                           <Pane background="tint1" border="muted">
-                            <Repository key={idx} variables={{ name, nb }} />
+                            <Repository variables={{ name, nb, idx }} />
                           </Pane>
                         );
                       }
@@ -86,7 +86,27 @@ export default ({ variables }) => {
                           </Pane>
                         </Pane>
                         <Pane background="tint1" border="muted" width={800}>
-                          {repos}
+                          <Table>
+                            <Table.Head>
+                              <Table.TextHeaderCell>
+                                Repository
+                              </Table.TextHeaderCell>
+                              <Table.TextHeaderCell>
+                                Description
+                              </Table.TextHeaderCell>
+                              <Table.TextHeaderCell>Path</Table.TextHeaderCell>
+                              <Table.TextHeaderCell>
+                                Commits
+                              </Table.TextHeaderCell>
+                              <Table.TextHeaderCell>
+                                Privacy
+                              </Table.TextHeaderCell>
+                              <Table.TextHeaderCell>
+                                Languages
+                              </Table.TextHeaderCell>
+                            </Table.Head>
+                            <Table.Body>{repos}</Table.Body>
+                          </Table>
                         </Pane>
                       </>
                     );

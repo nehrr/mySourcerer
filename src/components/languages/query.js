@@ -12,6 +12,7 @@ export const GET_LANGUAGES = gql`
                 history {
                   nodes {
                     authoredDate
+                    additions
                   }
                   totalCount
                 }

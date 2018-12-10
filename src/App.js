@@ -27,7 +27,6 @@ class App extends Component {
       <ApolloProvider client={client}>
         <div className="App">
           <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
             <Description variables={{ nb: 100 }} />
             <Languages variables={{ nb: 100 }} />
             <Overview variables={{ nb: 100 }} />

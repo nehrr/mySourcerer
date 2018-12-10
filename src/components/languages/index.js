@@ -34,6 +34,7 @@ export default ({ variables }) => {
           let sortedData = [];
           let labels = [];
           let dataAll = [];
+          let linesData = [];
           const repositories = data.viewer.repositories.nodes;
           let latestCommit = moment(
             data.viewer.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
@@ -42,21 +43,37 @@ export default ({ variables }) => {
           repositories.map(el => {
             const languages = el.languages.nodes;
             const commits = el.defaultBranchRef.target.history.totalCount;
+            const linesOfCode = el.defaultBranchRef.target.history.nodes;
+            let totalLines = 0;
+
+            linesOfCode.map(el => {
+              const { additions } = el;
+              totalLines += additions;
+            });
 
             languages.map(el => {
               const { name } = el;
               languagesData[name]
                 ? (languagesData[name] += commits)
                 : (languagesData[name] = commits);
+
+              languagesData[name + "_LOC"] = totalLines;
             });
 
             return languagesData;
           });
 
           for (var language in languagesData) {
-            if (languagesData.hasOwnProperty(language)) {
+            if (
+              languagesData.hasOwnProperty(language) &&
+              languagesData.hasOwnProperty(language + "_LOC")
+            ) {
               if (sortedData.length < 9) {
-                sortedData.push([language, languagesData[language]]);
+                sortedData.push([
+                  language,
+                  languagesData[language],
+                  languagesData[language + "_LOC"]
+                ]);
                 idx++;
               }
             }
@@ -67,7 +84,7 @@ export default ({ variables }) => {
           });
 
           for (let i = 0; i < sortedData.length; i++) {
-            sortedData[i][2] = backgroundColor[i];
+            sortedData[i][3] = backgroundColor[i];
             idx++;
           }
 
@@ -105,7 +122,7 @@ export default ({ variables }) => {
                     return (
                       <Pane
                         is="section"
-                        backgroundColor={el[2]}
+                        backgroundColor={el[3]}
                         border="muted"
                         width={90}
                         height={90}
@@ -121,7 +138,7 @@ export default ({ variables }) => {
                             position: "relative"
                           }}
                         >
-                          {el[0]} <br /> {el[1]} commits <br /> LOC
+                          {el[0]} <br /> {el[1]} commits <br /> {el[2]} LOC
                         </p>
                       </Pane>
                     );

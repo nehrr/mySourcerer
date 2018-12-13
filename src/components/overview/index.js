@@ -19,25 +19,31 @@ export default ({ variables }) => {
             let commits = [];
             let dataAll = [];
             let labels = [];
+            let languagesData = [];
+
             const repositories = data.viewer.repositories.nodes;
 
             if (repositories) {
               repositories.map(el => {
                 if (el.defaultBranchRef) {
+                  languagesData.push(el.languages.nodes);
                   commits.push(el.defaultBranchRef.target.history.nodes);
                 }
+                return commits;
               });
             }
 
-            commits.map(el => {
+            commits.map((el, idx) => {
               if (el) {
                 el.map(el => {
                   const date = el.authoredDate.substring(0, 7);
                   commitsRate[date]
                     ? (commitsRate[date] += 1)
                     : (commitsRate[date] = 1);
+                  return date;
                 });
               }
+              return commitsRate;
             });
 
             for (var date in commitsRate) {
@@ -51,6 +57,7 @@ export default ({ variables }) => {
               labels,
               datasets: [
                 {
+                  type: "line",
                   fill: false,
                   label: "Commiting Rate",
                   lineTension: 0.1,

@@ -28,15 +28,21 @@ export default ({ variables, key }) => {
               <>
                 <Table.Row key={idx}>
                   <Table.TextCell>
-                    <span>👻</span>
+                    <span role="img" aria-label="Ghost">
+                      👻
+                    </span>
                     {name}
                   </Table.TextCell>
                   <Table.TextCell>
-                    <span>👾 </span>
+                    <span role="img" aria-label="Invader">
+                      👾{" "}
+                    </span>
                     {description ? description : "N/A"}
                   </Table.TextCell>
                   <Table.TextCell>
-                    <span>🌑 </span>
+                    <span role="img" aria-label="Black Moon">
+                      🌑{" "}
+                    </span>
                     {resourcePath}
                   </Table.TextCell>
                   <Table.TextCell>
@@ -45,11 +51,17 @@ export default ({ variables, key }) => {
                   <Table.TextCell>
                     {!isPrivate ? (
                       <>
-                        <span>✔️</span> Public
+                        <span role="img" aria-label="Check">
+                          ✔️
+                        </span>{" "}
+                        Public
                       </>
                     ) : (
                       <>
-                        <span>🚫</span>Private
+                        <span role="img" aria-label="Denied">
+                          🚫
+                        </span>
+                        Private
                       </>
                     )}
                   </Table.TextCell>

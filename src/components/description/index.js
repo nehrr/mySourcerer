@@ -22,7 +22,6 @@ export default ({ variables }) => {
             const followers = data.viewer.followers.nodes;
             const following = data.viewer.following.nodes;
             const nbRepos = data.viewer.repositories.totalCount;
-            const repositories = data.viewer.repositories.nodes;
 
             const nbFollowers = Object.keys(followers).length;
             const nbFollowing = Object.keys(following).length;

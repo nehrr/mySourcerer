@@ -5,7 +5,6 @@ import Description from "./components/description/";
 import Languages from "./components/languages/";
 import Overview from "./components/overview/";
 
-import logo from "./ch0pper.png";
 import "./App.css";
 
 const client = new ApolloClient({

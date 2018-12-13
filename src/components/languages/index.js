@@ -17,7 +17,6 @@ const backgroundColor = [
   "#c1e7ff",
   "#c4eaff"
 ];
-let idx = 0;
 
 export default ({ variables }) => {
   const { nb } = variables;
@@ -34,7 +33,6 @@ export default ({ variables }) => {
           let sortedData = [];
           let labels = [];
           let dataAll = [];
-          let linesData = [];
           const repositories = data.viewer.repositories.nodes;
           let latestCommit = moment(
             data.viewer.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
@@ -49,6 +47,7 @@ export default ({ variables }) => {
             linesOfCode.map(el => {
               const { additions } = el;
               totalLines += additions;
+              return totalLines;
             });
 
             languages.map(el => {
@@ -58,6 +57,7 @@ export default ({ variables }) => {
                 : (languagesData[name] = commits);
 
               languagesData[name + "_LOC"] = totalLines;
+              return languagesData;
             });
 
             return languagesData;
@@ -74,7 +74,6 @@ export default ({ variables }) => {
                   languagesData[language],
                   languagesData[language + "_LOC"]
                 ]);
-                idx++;
               }
             }
           }
@@ -85,7 +84,6 @@ export default ({ variables }) => {
 
           for (let i = 0; i < sortedData.length; i++) {
             sortedData[i][3] = backgroundColor[i];
-            idx++;
           }
 
           for (const languageData of sortedData) {

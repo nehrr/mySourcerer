@@ -42,7 +42,7 @@ export default ({ variables }) => {
                       const { name } = el;
                       if (!repos.includes(name) && repos.length <= 10) {
                         repos.push(
-                          <Pane background="tint1" border="muted">
+                          <Pane background="tint1" border="muted" key={idx}>
                             <Repository variables={{ name, nb, idx }} />
                           </Pane>
                         );

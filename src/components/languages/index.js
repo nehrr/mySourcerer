@@ -39,16 +39,23 @@ export default ({ variables }) => {
           ).format("LLL");
 
           repositories.map(el => {
+            let primaryLanguage;
+            if (el.primaryLanguage) {
+              primaryLanguage = el.primaryLanguage.name;
+            }
             const languages = el.languages.nodes;
             const commits = el.defaultBranchRef.target.history.totalCount;
             const linesOfCode = el.defaultBranchRef.target.history.nodes;
             let totalLines = 0;
 
             linesOfCode.map(el => {
-              const { additions } = el;
+              const { additions, deletions } = el;
               totalLines += additions;
+              totalLines -= deletions;
               return totalLines;
             });
+
+            // languagesData[primaryLanguage + "_LOC"] = totalLines;
 
             languages.map(el => {
               const { name } = el;

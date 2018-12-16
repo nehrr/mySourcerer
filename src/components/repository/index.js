@@ -11,26 +11,16 @@ import {
 } from "evergreen-ui";
 import { GET_REPO_INFOS } from "./query";
 
-export default ({ variables }) => {
-  // export default class Repository extends React.Component {
-  //   constructor(props) {
-  //     super(props);
-  //     this.state = {
-  //       variables: props.variables,
-  //       nb: props.variables.nb,
-  //       isShown: false,
-  //       moreData: null
-  //     };
-  //   }
+export default class Repository extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      nb: props.variables.nb,
+      isShown: false
+    };
+  }
 
-  // let variables = {
-  //   variables: {
-  //     nb: 10,
-  //     cursor: null
-  //   }
-  // };
-
-  const row = (el, idx) => {
+  row = (el, idx) => {
     let totalCount;
     const collabs = el.collaborators.nodes;
     const languages = el.languages.nodes;
@@ -41,10 +31,10 @@ export default ({ variables }) => {
       <>
         <Table.Row
           key={idx}
-          // isSelectable
-          // onSelect={() => {
-          //   this.setState({ isShown: true });
-          // }}
+          isSelectable
+          onSelect={() => {
+            this.setState({ isShown: true });
+          }}
         >
           <Table.TextCell>
             <span role="img" aria-label="Ghost">
@@ -108,94 +98,87 @@ export default ({ variables }) => {
     );
   };
 
-  // render() {
-  // console.log("rendering");
-  // console.log(this.state, this.props);
-  // const { nb, isShown, variables } = this.state;
-  return (
-    <Query
-      query={GET_REPO_INFOS}
-      variables={variables}
-      fetchPolicy="cache-and-network"
-    >
-      {({ loading, error, data, fetchMore }) => {
-        console.log(variables, ":::: running query");
-        if (loading) {
-          return <Spinner />;
-        }
+  render() {
+    const { nb, isShown } = this.state;
+    return (
+      <Query
+        query={GET_REPO_INFOS}
+        variables={{ nb }}
+        fetchPolicy="cache-and-network"
+      >
+        {({ loading, error, data, fetchMore }) => {
+          console.log(data);
+          if (loading) {
+            return <Spinner />;
+          }
 
-        if (data) {
-          // let dialog = (
-          //   <Dialog
-          //     isShown={isShown}
-          //     title="Danger intent"
-          //     hasFooter={false}
-          //     onCloseComplete={() => this.setState({ isShown: false })}
-          //   >
-          //     Dialog content
-          //   </Dialog>
-          // );
-
-          let repositories = data.viewer.repositories.nodes;
-          console.log(repositories);
-          const { pageInfo } = data.viewer.repositories;
-          // const moreData = this.state;
-
-          return (
-            <>
-              <Heading size={900}>What?</Heading>
-              <Pane
-                background="tint1"
-                border="muted"
-                width={800}
-                marginBottom={24}
+          if (data) {
+            let dialog = (
+              <Dialog
+                isShown={isShown}
+                title="Danger intent"
+                hasFooter={false}
+                onCloseComplete={() => this.setState({ isShown: false })}
               >
-                {/* {dialog} */}
+                Dialog content
+              </Dialog>
+            );
 
-                <Table>
-                  <Table.Head>
-                    <Table.TextHeaderCell>Repository</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Description</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Path</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Commits</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Privacy</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Languages</Table.TextHeaderCell>
-                    <Table.TextHeaderCell>Collaborators</Table.TextHeaderCell>
-                  </Table.Head>
-                  <Table.Body>
-                    {repositories.map((repo, idx) => {
-                      return row(repo, idx);
-                    })}
-                  </Table.Body>
-                </Table>
-                <Button
-                  marginRight={16}
-                  appearance="minimal"
-                  onClick={() => {
-                    if (pageInfo.hasNextPage) {
-                      fetchMore({
-                        variables: {
-                          cursor: pageInfo.endCursor
-                        },
-                        updateQuery: (prev, { fetchMoreResult }) => {
-                          repositories =
-                            fetchMoreResult.viewer.repositories.nodes;
-                          // this.setState({ moreData: repositories });
-                          // console.log(repositories);
-                        }
-                      });
-                    }
-                  }}
+            let repositories = data.viewer.repositories.nodes;
+            const { pageInfo } = data.viewer.repositories;
+
+            return (
+              <>
+                <Heading size={900}>What?</Heading>
+                <Pane
+                  background="tint1"
+                  border="muted"
+                  width={800}
+                  marginBottom={24}
                 >
-                  Next
-                </Button>
-              </Pane>
-            </>
-          );
-        }
-        return null;
-      }}
-    </Query>
-  );
-};
-// }
+                  {dialog}
+
+                  <Table>
+                    <Table.Head>
+                      <Table.TextHeaderCell>Repository</Table.TextHeaderCell>
+                      <Table.TextHeaderCell>Description</Table.TextHeaderCell>
+                      <Table.TextHeaderCell>Path</Table.TextHeaderCell>
+                      <Table.TextHeaderCell>Commits</Table.TextHeaderCell>
+                      <Table.TextHeaderCell>Privacy</Table.TextHeaderCell>
+                      <Table.TextHeaderCell>Languages</Table.TextHeaderCell>
+                      <Table.TextHeaderCell>Collaborators</Table.TextHeaderCell>
+                    </Table.Head>
+                    <Table.Body>
+                      {repositories.map((repo, idx) => {
+                        return this.row(repo, idx);
+                      })}
+                    </Table.Body>
+                  </Table>
+                  <Button
+                    marginRight={16}
+                    appearance="minimal"
+                    onClick={() => {
+                      if (pageInfo.hasNextPage) {
+                        fetchMore({
+                          variables: {
+                            cursor: pageInfo.endCursor
+                          },
+                          updateQuery: (prev, { fetchMoreResult }) => {
+                            return Object.assign({}, prev, fetchMoreResult);
+                          }
+                        });
+                      }
+                    }}
+                  >
+                    Next
+                  </Button>
+                </Pane>
+              </>
+            );
+          }
+          return null;
+        }}
+      </Query>
+    );
+  }
+}

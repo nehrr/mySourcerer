@@ -107,7 +107,6 @@ export default class Repository extends React.Component {
         fetchPolicy="cache-and-network"
       >
         {({ loading, error, data, fetchMore }) => {
-          console.log(data);
           if (loading) {
             return <Spinner />;
           }

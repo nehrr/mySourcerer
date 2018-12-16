@@ -1,12 +1,20 @@
 import gql from "graphql-tag";
 
 export const GET_REPO_INFOS = gql`
-  query($cursorUp: String, $nb: Int) {
+  query(
+    $cursorUp: String
+    $first: Int
+    $last: Int
+    $cursorDown: String
+    $nb: Int!
+  ) {
     viewer {
       repositories(
-        first: $nb
+        first: $first
         orderBy: { field: CREATED_AT, direction: DESC }
         after: $cursorUp
+        before: $cursorDown
+        last: $last
         ownerAffiliations: OWNER
       ) {
         nodes {

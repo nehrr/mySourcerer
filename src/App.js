@@ -28,7 +28,7 @@ class App extends Component {
         <header className="App-header">
           <ApolloProvider client={client}>
             <Description variables={{ nb: 100 }} />
-            <Repository variables={{ nb: 10 }} />
+            <Repository variables={{ first: 10, nb: 10 }} />
             <Languages variables={{ nb: 100 }} />
             <Overview variables={{ nb: 100 }} />
           </ApolloProvider>

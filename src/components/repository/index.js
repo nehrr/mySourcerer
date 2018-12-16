@@ -16,7 +16,9 @@ export default class Repository extends React.Component {
     super(props);
     this.state = {
       nb: props.variables.nb,
-      isShown: false
+      first: props.variables.first,
+      isShown: false,
+      query: GET_REPO_INFOS
     };
   }
 
@@ -99,11 +101,11 @@ export default class Repository extends React.Component {
   };
 
   render() {
-    const { nb, isShown } = this.state;
+    const { first, isShown, query, nb } = this.state;
     return (
       <Query
-        query={GET_REPO_INFOS}
-        variables={{ nb }}
+        query={query}
+        variables={{ first, nb }}
         fetchPolicy="cache-and-network"
       >
         {({ loading, error, data, fetchMore }) => {
@@ -160,7 +162,9 @@ export default class Repository extends React.Component {
                       if (pageInfo.hasPreviousPage) {
                         fetchMore({
                           variables: {
-                            cursorDown: pageInfo.startCursor
+                            cursorDown: pageInfo.startCursor,
+                            first: null,
+                            last: 10
                           },
                           updateQuery: (prev, { fetchMoreResult }) => {
                             return Object.assign({}, prev, fetchMoreResult);
@@ -169,7 +173,7 @@ export default class Repository extends React.Component {
                       }
                     }}
                   >
-                    First page
+                    Previous
                   </Button>
                   <Button
                     marginRight={16}
@@ -178,7 +182,9 @@ export default class Repository extends React.Component {
                       if (pageInfo.hasNextPage) {
                         fetchMore({
                           variables: {
-                            cursorUp: pageInfo.endCursor
+                            cursorUp: pageInfo.endCursor,
+                            last: null,
+                            first: 10
                           },
                           updateQuery: (prev, { fetchMoreResult }) => {
                             return Object.assign({}, prev, fetchMoreResult);

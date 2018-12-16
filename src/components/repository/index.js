@@ -169,7 +169,7 @@ export default class Repository extends React.Component {
                       }
                     }}
                   >
-                    Previous
+                    First page
                   </Button>
                   <Button
                     marginRight={16}

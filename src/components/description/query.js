@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 export const GET_DATA = gql`
-  query($nb: Int!, $cursor: String) {
+  query($nb: Int!) {
     viewer {
       avatarUrl(size: 250)
       login
@@ -11,7 +11,6 @@ export const GET_DATA = gql`
       repositories(
         first: $nb
         orderBy: { field: CREATED_AT, direction: DESC }
-        after: $cursor
       ) {
         totalCount
         nodes {
@@ -28,10 +27,6 @@ export const GET_DATA = gql`
               }
             }
           }
-        }
-        pageInfo {
-          hasNextPage
-          endCursor
         }
       }
       followers(first: $nb) {

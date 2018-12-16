@@ -1,18 +1,13 @@
 import React from "react";
 import { Query } from "react-apollo";
-import { Spinner, Avatar, Pane, Table, Heading } from "evergreen-ui";
-import Repository from "../repository";
+import { Spinner, Avatar, Pane, Heading } from "evergreen-ui";
 import moment from "moment";
 import { GET_DATA } from "./query";
 
-let repos = [];
-
 export default ({ variables }) => {
-  const { nb } = variables;
-
   return (
     <>
-      <Query query={GET_DATA} variables={{ nb }}>
+      <Query query={GET_DATA} variables={variables}>
         {({ loading, error, data }) => {
           if (loading) {
             return <Spinner />;
@@ -33,14 +28,6 @@ export default ({ variables }) => {
             ).format("LLL");
 
             repositories.map((el, idx) => {
-              const { name } = el;
-              if (!repos.includes(name) && repos.length <= 10) {
-                repos.push(
-                  <Pane background="tint1" border="muted" key={idx}>
-                    <Repository variables={{ name, nb, idx }} />
-                  </Pane>
-                );
-              }
               if (el.defaultBranchRef) {
                 const commits = el.defaultBranchRef.target.history.totalCount;
                 nbCommit += commits;
@@ -78,26 +65,6 @@ export default ({ variables }) => {
                     Repositories: {nbRepos} <br />
                     Commits: {nbCommit} || Latest commit: {latestCommit}
                   </Pane>
-                </Pane>
-                <Heading size={900}>What?</Heading>
-                <Pane
-                  background="tint1"
-                  border="muted"
-                  width={800}
-                  marginBottom={24}
-                >
-                  <Table>
-                    <Table.Head>
-                      <Table.TextHeaderCell>Repository</Table.TextHeaderCell>
-                      <Table.TextHeaderCell>Description</Table.TextHeaderCell>
-                      <Table.TextHeaderCell>Path</Table.TextHeaderCell>
-                      <Table.TextHeaderCell>Commits</Table.TextHeaderCell>
-                      <Table.TextHeaderCell>Privacy</Table.TextHeaderCell>
-                      <Table.TextHeaderCell>Languages</Table.TextHeaderCell>
-                      <Table.TextHeaderCell>Collaborators</Table.TextHeaderCell>
-                    </Table.Head>
-                    <Table.Body>{repos}</Table.Body>
-                  </Table>
                 </Pane>
               </>
             );

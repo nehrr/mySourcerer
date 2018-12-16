@@ -1,37 +1,19 @@
 import gql from "graphql-tag";
 
 export const GET_DATA = gql`
-  query($nb: Int!) {
+  query($nb: Int!, $cursor: String) {
     viewer {
       avatarUrl(size: 250)
       login
       name
       bio
       location
-      repositories(ownerAffiliations: OWNER) {
-        totalCount
-      }
-      followers(first: $nb) {
-        nodes {
-          login
-        }
-      }
-      following(first: $nb) {
-        nodes {
-          login
-        }
-      }
-    }
-  }
-`;
-
-export const GET_REPO = gql`
-  query($nb: Int!) {
-    viewer {
       repositories(
         first: $nb
         orderBy: { field: CREATED_AT, direction: DESC }
+        after: $cursor
       ) {
+        totalCount
         nodes {
           name
           defaultBranchRef {
@@ -46,6 +28,20 @@ export const GET_REPO = gql`
               }
             }
           }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+      }
+      followers(first: $nb) {
+        nodes {
+          login
+        }
+      }
+      following(first: $nb) {
+        nodes {
+          login
         }
       }
     }

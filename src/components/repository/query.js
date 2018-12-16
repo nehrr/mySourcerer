@@ -8,8 +8,12 @@ export const GET_REPO_INFOS = gql`
         description
         resourcePath
         isPrivate
-        collaborators {
+        collaborators(first: $nb) {
           totalCount
+          nodes {
+            avatarUrl
+            login
+          }
         }
         languages(first: $nb) {
           nodes {

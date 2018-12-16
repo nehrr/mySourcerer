@@ -6,9 +6,6 @@ export const GET_LANGUAGES = gql`
       repositories(last: $nb, orderBy: { field: CREATED_AT, direction: DESC }) {
         nodes {
           name
-          primaryLanguage {
-            name
-          }
           defaultBranchRef {
             target {
               ... on Commit {

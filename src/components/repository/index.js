@@ -1,6 +1,6 @@
 import React from "react";
 import { Query } from "react-apollo";
-import { Spinner, Table, Dialog } from "evergreen-ui";
+import { Spinner, Table, Dialog, Avatar } from "evergreen-ui";
 import { GET_REPO_INFOS } from "./query";
 
 // export default ({ variables, key }) => {
@@ -40,6 +40,7 @@ export default class Repository extends React.Component {
             let totalCount;
             if (repository) {
               const { name, description, resourcePath, isPrivate } = repository;
+              const collabs = repository.collaborators.nodes;
               const languages = repository.languages.nodes;
               if (repository.defaultBranchRef) {
                 totalCount =
@@ -96,7 +97,26 @@ export default class Repository extends React.Component {
                     </Table.TextCell>
                     <Table.TextCell>
                       {languages.map(el => {
-                        return <>{el.name} </>;
+                        return (
+                          <>
+                            {el.name} <br />
+                          </>
+                        );
+                      })}
+                    </Table.TextCell>
+                    <Table.TextCell>
+                      {collabs.map(el => {
+                        return (
+                          <>
+                            {" "}
+                            <Avatar
+                              size={20}
+                              shape="circle"
+                              src={el.avatarUrl}
+                            />
+                            {el.login} <br />
+                          </>
+                        );
                       })}
                     </Table.TextCell>
                   </Table.Row>

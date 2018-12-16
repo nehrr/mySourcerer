@@ -23,15 +23,15 @@ const client = new ApolloClient({
 class App extends Component {
   render() {
     return (
-      <ApolloProvider client={client}>
-        <div className="App">
-          <header className="App-header">
+      <div className="App">
+        <header className="App-header">
+          <ApolloProvider client={client}>
             <Description variables={{ nb: 100 }} />
             <Languages variables={{ nb: 100 }} />
             <Overview variables={{ nb: 100 }} />
-          </header>
-        </div>
-      </ApolloProvider>
+          </ApolloProvider>
+        </header>
+      </div>
     );
   }
 }

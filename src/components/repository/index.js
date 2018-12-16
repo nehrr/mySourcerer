@@ -157,10 +157,28 @@ export default class Repository extends React.Component {
                     marginRight={16}
                     appearance="minimal"
                     onClick={() => {
+                      if (pageInfo.hasPreviousPage) {
+                        fetchMore({
+                          variables: {
+                            cursorDown: pageInfo.startCursor
+                          },
+                          updateQuery: (prev, { fetchMoreResult }) => {
+                            return Object.assign({}, prev, fetchMoreResult);
+                          }
+                        });
+                      }
+                    }}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    marginRight={16}
+                    appearance="minimal"
+                    onClick={() => {
                       if (pageInfo.hasNextPage) {
                         fetchMore({
                           variables: {
-                            cursor: pageInfo.endCursor
+                            cursorUp: pageInfo.endCursor
                           },
                           updateQuery: (prev, { fetchMoreResult }) => {
                             return Object.assign({}, prev, fetchMoreResult);

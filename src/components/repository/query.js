@@ -1,13 +1,14 @@
 import gql from "graphql-tag";
 
 export const GET_REPO_INFOS = gql`
-  query($cursor: String, $nb: Int!) {
+  query($cursorUp: String, $nb: Int!, $cursorDown: String) {
     viewer {
       repositories(
         first: $nb
         orderBy: { field: CREATED_AT, direction: DESC }
-        after: $cursor
+        after: $cursorUp
         ownerAffiliations: OWNER
+        before: $cursorDown
       ) {
         nodes {
           name
@@ -44,6 +45,8 @@ export const GET_REPO_INFOS = gql`
         pageInfo {
           hasNextPage
           endCursor
+          hasPreviousPage
+          startCursor
         }
       }
     }

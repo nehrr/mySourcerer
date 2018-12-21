@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const GET_DATA = gql`
-  query($nb: Int!) {
-    viewer {
+  query($nb: Int!, $login: String!) {
+    user(login: $login) {
       avatarUrl(size: 250)
       login
       name

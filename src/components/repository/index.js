@@ -9,7 +9,7 @@ import {
   Pane,
   Heading
 } from "evergreen-ui";
-import { GET_REPO_INFOS } from "./query";
+import { GET_REPO_INFOS_SELF, GET_REPO_INFOS_OTHERS } from "./query";
 
 export default class Repository extends React.Component {
   constructor(props) {
@@ -18,13 +18,14 @@ export default class Repository extends React.Component {
       nb: props.variables.nb,
       first: props.variables.first,
       isShown: false,
-      query: GET_REPO_INFOS
+      login: props.variables.login
     };
   }
 
   row = (el, idx) => {
     let totalCount;
-    const collabs = el.collaborators.nodes;
+
+    const collabs = el.collaborators ? el.collaborators.nodes : null;
     const languages = el.languages.nodes;
     if (el.defaultBranchRef) {
       totalCount = el.defaultBranchRef.target.history.totalCount;
@@ -86,14 +87,16 @@ export default class Repository extends React.Component {
             })}
           </Table.TextCell>
           <Table.TextCell>
-            {collabs.map(el => {
-              return (
-                <>
-                  <Avatar size={20} shape="circle" src={el.avatarUrl} />
-                  {el.login} <br />
-                </>
-              );
-            })}
+            {collabs
+              ? collabs.map(el => {
+                  return (
+                    <>
+                      <Avatar size={20} shape="circle" src={el.avatarUrl} />
+                      {el.login} <br />
+                    </>
+                  );
+                })
+              : "N/A"}
           </Table.TextCell>
         </Table.Row>
       </>
@@ -101,13 +104,11 @@ export default class Repository extends React.Component {
   };
 
   render() {
-    const { first, isShown, query, nb } = this.state;
+    const { first, isShown, nb, login } = this.state;
+    const query =
+      login === "nehrr" ? GET_REPO_INFOS_SELF : GET_REPO_INFOS_OTHERS;
     return (
-      <Query
-        query={query}
-        variables={{ first, nb }}
-        fetchPolicy="cache-and-network"
-      >
+      <Query query={query} variables={{ first, nb, login }}>
         {({ loading, error, data, fetchMore }) => {
           if (loading) {
             return <Spinner />;
@@ -125,8 +126,8 @@ export default class Repository extends React.Component {
               </Dialog>
             );
 
-            let repositories = data.viewer.repositories.nodes;
-            const { pageInfo } = data.viewer.repositories;
+            let repositories = data.user.repositories.nodes;
+            const { pageInfo } = data.user.repositories;
 
             return (
               <>

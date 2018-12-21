@@ -10,6 +10,9 @@ import "./App.css";
 
 const client = new ApolloClient({
   uri: "https://api.github.com/graphql",
+  opts: {
+    mode: "no-cors"
+  },
   request: operation => {
     const { REACT_APP_TOKEN } = process.env;
     operation.setContext(context => ({
@@ -27,10 +30,11 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <ApolloProvider client={client}>
-            <Description variables={{ nb: 100 }} />
-            <Repository variables={{ first: 10, nb: 10 }} />
-            <Languages variables={{ nb: 100 }} />
-            <Overview variables={{ nb: 100 }} />
+            {/* get login in search bar ? */}
+            <Description variables={{ nb: 100, login: "chang" }} />
+            <Repository variables={{ first: 10, nb: 10, login: "chang" }} />
+            <Languages variables={{ nb: 100, login: "chang" }} />
+            <Overview variables={{ nb: 100, login: "chang" }} />
           </ApolloProvider>
         </header>
       </div>

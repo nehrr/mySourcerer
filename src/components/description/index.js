@@ -13,18 +13,18 @@ export default ({ variables }) => {
             return <Spinner />;
           }
           if (data) {
-            const { login, name, bio, location, avatarUrl } = data.viewer;
-            const followers = data.viewer.followers.nodes;
-            const following = data.viewer.following.nodes;
-            const nbRepos = data.viewer.repositories.totalCount;
+            const { login, name, bio, location, avatarUrl } = data.user;
+            const followers = data.user.followers.nodes;
+            const following = data.user.following.nodes;
+            const nbRepos = data.user.repositories.totalCount;
 
             const nbFollowers = Object.keys(followers).length;
             const nbFollowing = Object.keys(following).length;
 
             let nbCommit = 0;
-            const repositories = data.viewer.repositories.nodes;
+            const repositories = data.user.repositories.nodes;
             let latestCommit = moment(
-              data.viewer.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
+              data.user.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
             ).format("LLL");
 
             repositories.map((el, idx) => {

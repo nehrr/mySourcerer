@@ -19,10 +19,10 @@ const backgroundColor = [
 ];
 
 export default ({ variables }) => {
-  const { nb } = variables;
+  const { nb, login } = variables;
 
   return (
-    <Query query={GET_LANGUAGES} variables={{ nb }}>
+    <Query query={GET_LANGUAGES} variables={{ nb, login }}>
       {({ loading, error, data }) => {
         if (loading) {
           return <Spinner />;
@@ -33,9 +33,9 @@ export default ({ variables }) => {
           let sortedData = [];
           let labels = [];
           let dataAll = [];
-          const repositories = data.viewer.repositories.nodes;
+          const repositories = data.user.repositories.nodes;
           let latestCommit = moment(
-            data.viewer.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
+            data.user.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
           ).format("LLL");
 
           repositories.map(el => {

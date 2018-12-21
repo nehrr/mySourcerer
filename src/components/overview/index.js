@@ -5,11 +5,11 @@ import { Spinner, Pane, Heading } from "evergreen-ui";
 import { GET_OVERVIEW } from "./query";
 
 export default ({ variables }) => {
-  const { nb } = variables;
+  const { nb, login } = variables;
 
   return (
     <>
-      <Query query={GET_OVERVIEW} variables={{ nb }}>
+      <Query query={GET_OVERVIEW} variables={{ nb, login }}>
         {({ loading, error, data }) => {
           if (loading) {
             return <Spinner />;
@@ -21,7 +21,7 @@ export default ({ variables }) => {
             let labels = [];
             let languagesData = [];
 
-            const repositories = data.viewer.repositories.nodes;
+            const repositories = data.user.repositories.nodes;
 
             if (repositories) {
               repositories.map(el => {

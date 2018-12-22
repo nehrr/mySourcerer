@@ -1,6 +1,6 @@
 import React from "react";
 import { Query } from "react-apollo";
-import { Spinner, Avatar, Pane, Heading } from "evergreen-ui";
+import { Spinner, Avatar, Pane, Heading, toaster } from "evergreen-ui";
 import moment from "moment";
 import { GET_DATA } from "./query";
 
@@ -12,6 +12,21 @@ export default ({ variables }) => {
           if (loading) {
             return <Spinner />;
           }
+
+          if (error) {
+            toaster.notify("There was an issue retrieving data");
+            return (
+              <Pane
+                background="tint1"
+                border="muted"
+                width={800}
+                marginBottom={24}
+              >
+                Could not retrieve description data
+              </Pane>
+            );
+          }
+
           if (data) {
             const { login, name, bio, location, avatarUrl } = data.user;
             const followers = data.user.followers.nodes;

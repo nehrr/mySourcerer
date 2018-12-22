@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import { Pie } from "react-chartjs-2";
 import { Query } from "react-apollo";
-import { Spinner, Pane, Heading } from "evergreen-ui";
+import { Spinner, Pane, Heading, toaster } from "evergreen-ui";
 import { GET_LANGUAGES } from "./query";
 
 const backgroundColor = [
@@ -26,6 +26,20 @@ export default ({ variables }) => {
       {({ loading, error, data }) => {
         if (loading) {
           return <Spinner />;
+        }
+
+        if (error) {
+          toaster.notify("There was an issue retrieving data");
+          return (
+            <Pane
+              background="tint1"
+              border="muted"
+              width={800}
+              marginBottom={24}
+            >
+              Could not retrieve language data
+            </Pane>
+          );
         }
 
         if (data) {

@@ -42,6 +42,9 @@ export const GET_REPO_INFOS = gql`
                   history {
                     nodes {
                       authoredDate
+                      message
+                      additions
+                      deletions
                     }
                     totalCount
                   }

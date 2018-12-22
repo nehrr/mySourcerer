@@ -7,8 +7,12 @@ import {
   Avatar,
   Button,
   Pane,
-  Heading
+  Heading,
+  toaster
 } from "evergreen-ui";
+import { Timeline } from "antd";
+import "antd/dist/antd.css";
+import moment from "moment";
 import { GET_REPO_INFOS } from "./query";
 
 export default class Repository extends React.Component {
@@ -19,7 +23,8 @@ export default class Repository extends React.Component {
       first: props.variables.first,
       isShown: false,
       login: props.variables.login,
-      query: GET_REPO_INFOS
+      query: GET_REPO_INFOS,
+      repoData: null
     };
   }
 
@@ -41,20 +46,15 @@ export default class Repository extends React.Component {
           key={idx}
           isSelectable
           onSelect={() => {
-            this.setState({ isShown: true });
+            this.setState({ isShown: true, repoData: el });
           }}
         >
           <Table.TextCell>
             <span role="img" aria-label="Ghost">
               👻
             </span>
-            {el.name}
-          </Table.TextCell>
-          <Table.TextCell>
-            <span role="img" aria-label="Invader">
-              👾
-            </span>
-            {el.description ? el.description : "N/A"}
+            {el.name} <br />
+            {el.description ? el.description : null}
           </Table.TextCell>
           <Table.TextCell>
             <span role="img" aria-label="Black Moon">
@@ -108,8 +108,41 @@ export default class Repository extends React.Component {
     );
   };
 
+  dialog = data => {
+    const { isShown } = this.state;
+    if (data) {
+      const { name, description, resourcePath, isPrivate } = data;
+      const commits = data.defaultBranchRef
+        ? data.defaultBranchRef.target.history.nodes
+        : null;
+      return (
+        <Dialog
+          isShown={isShown}
+          title={name}
+          hasFooter={false}
+          onCloseComplete={() => this.setState({ isShown: false })}
+        >
+          {description} {resourcePath} {isPrivate}
+          {commits && (
+            <Timeline>
+              {commits.map(el => {
+                return (
+                  <Timeline.Item color="green">
+                    {moment(el.authoredDate.toString()).format("LLL")}
+                    :: {el.message} <br />+ {el.additions} <br />-{" "}
+                    {el.deletions}
+                  </Timeline.Item>
+                );
+              })}
+            </Timeline>
+          )}
+        </Dialog>
+      );
+    }
+  };
+
   render() {
-    const { first, isShown, nb, login, query } = this.state;
+    const { first, nb, login, query, repoData } = this.state;
     return (
       <Query query={query} variables={{ first, nb, login }} errorPolicy="all">
         {({ loading, error, data, fetchMore }) => {
@@ -117,18 +150,22 @@ export default class Repository extends React.Component {
             return <Spinner />;
           }
 
-          if (data) {
-            let dialog = (
-              <Dialog
-                isShown={isShown}
-                title="Danger intent"
-                hasFooter={false}
-                onCloseComplete={() => this.setState({ isShown: false })}
-              >
-                Dialog content
-              </Dialog>
-            );
+          if (!data) {
+            if (error) {
+              return (
+                <Pane
+                  background="tint1"
+                  border="muted"
+                  width={800}
+                  marginBottom={24}
+                >
+                  Could not retrieve repositories data
+                </Pane>
+              );
+            }
+          }
 
+          if (data) {
             let repositories = data.user.repositories.nodes;
             const { pageInfo } = data.user.repositories;
 
@@ -141,12 +178,11 @@ export default class Repository extends React.Component {
                   width={800}
                   marginBottom={24}
                 >
-                  {dialog}
+                  {this.dialog(repoData)}
 
                   <Table>
                     <Table.Head>
                       <Table.TextHeaderCell>Repository</Table.TextHeaderCell>
-                      <Table.TextHeaderCell>Description</Table.TextHeaderCell>
                       <Table.TextHeaderCell>Path</Table.TextHeaderCell>
                       <Table.TextHeaderCell>Commits</Table.TextHeaderCell>
                       <Table.TextHeaderCell>Privacy</Table.TextHeaderCell>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 import { Query } from "react-apollo";
-import { Spinner, Pane, Heading } from "evergreen-ui";
+import { Spinner, Pane, Heading, toaster } from "evergreen-ui";
 import { GET_OVERVIEW } from "./query";
 
 export default ({ variables }) => {
@@ -14,6 +14,21 @@ export default ({ variables }) => {
           if (loading) {
             return <Spinner />;
           }
+
+          if (error) {
+            toaster.notify("There was an issue retrieving data");
+            return (
+              <Pane
+                background="tint1"
+                border="muted"
+                width={800}
+                marginBottom={24}
+              >
+                Could not retrieve overview data
+              </Pane>
+            );
+          }
+
           if (data) {
             let commitsRate = [];
             let commits = [];

@@ -7,6 +7,7 @@ export const GET_DATA = gql`
       login
       name
       bio
+      url
       location
       repositories(
         first: $nb

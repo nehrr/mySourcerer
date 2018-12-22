@@ -32,6 +32,13 @@ class App extends Component {
     search: ""
   };
 
+  componentDidMount() {
+    if (localStorage.getItem('name')) {
+      const name = localStorage.getItem('name');
+      this.setState({name})
+    }
+  }
+
   _handleEnter = () => {
     const { search } = this.state;
     const CHECK_LOGIN = gql`
@@ -46,7 +53,9 @@ class App extends Component {
       .query({ query: CHECK_LOGIN, variables: { login: search } })
       .then(res => {
         if (res.data.user !== null) {
-          this.setState({ name: res.data.user.login });
+          const {login} = res.data.user
+          this.setState({ name: login });
+          localStorage.setItem('name', login);
         }
       })
       .catch(error => {

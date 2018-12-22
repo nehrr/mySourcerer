@@ -28,7 +28,7 @@ export default ({ variables }) => {
           }
 
           if (data) {
-            const { login, name, bio, location, avatarUrl } = data.user;
+            const { login, name, bio, location, avatarUrl, url } = data.user;
             const followers = data.user.followers.nodes;
             const following = data.user.following.nodes;
             const nbRepos = data.user.repositories.totalCount;
@@ -69,12 +69,19 @@ export default ({ variables }) => {
                     alignItems="center"
                     style={{ fontSize: "12px" }}
                   >
+                    <Pane
+                      cursor="help"
+                      onClick={() => {
+                        window.open(url, "_blank");
+                      }}
+                    >
                     <Avatar
                       size={100}
                       shape="circle"
                       src={avatarUrl}
                       style={{ marginRight: 100 }}
                     />
+                  </Pane>
                     {name} aka {login} <br />
                     {bio} @ {location}
                     <br />

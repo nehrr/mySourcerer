@@ -7,7 +7,8 @@ import {
   Avatar,
   Button,
   Pane,
-  Heading
+  Heading,
+  Badge
 } from "evergreen-ui";
 import { Timeline, Icon } from "antd";
 import "antd/dist/antd.css";
@@ -114,13 +115,14 @@ export default class Repository extends React.Component {
 
       const collabs = data.collaborators ? data.collaborators.nodes : null;
       const languages = data.languages.nodes;
-      const { name, description, resourcePath, isPrivate } = data;
+      let { name, description, isPrivate } = data;
       const commits = data.defaultBranchRef
         ? data.defaultBranchRef.target.history.nodes
         : null;
       if (data.defaultBranchRef) {
         totalCount = data.defaultBranchRef.target.history.totalCount;
       }
+      name = `Repository: ${name}`;
       return (
         <Dialog
           isShown={isShown}
@@ -140,48 +142,109 @@ export default class Repository extends React.Component {
               float="left"
               justifyContent="center"
               alignItems="center"
+              flexDirection="row"
             >
-              {description} {resourcePath} <br />{" "}
-              {!data.isPrivate ? (
-                <>
-                  <span role="img" aria-label="Check">
-                    ✔️
-                  </span>
-                  Public
-                </>
-              ) : (
-                <>
-                  <span role="img" aria-label="Denied">
-                    🚫
-                  </span>
-                  Private
-                </>
-              )}{" "}
-              <br />
-              {collabs &&
-                collabs.map(el => {
-                  return (
-                    <Pane
-                      is="section"
-                      justifyContent="center"
-                      alignItems="center"
-                      width={120}
-                      height={120}
-                      float="left"
-                      margin={5}
-                      padding={5}
-                      flexDirection="row"
-                      cursor="help"
-                      onClick={() => {
-                        window.open(el.url, "_blank");
-                      }}
-                    >
-                      <Avatar size={100} shape="circle" src={el.avatarUrl} />
+              <Pane
+                justifyContent="center"
+                alignItems="center"
+                float="left"
+                flexDirection="row"
+              >
+                {description ? (
+                  <>
+                    <Heading size={800}>What?</Heading>
+                    <Pane marginBottom={20}> {description} </Pane>
+                  </>
+                ) : null}
+
+                {collabs ? (
+                  <Pane marginBottom={20}>
+                    <Heading size={800}>Who?</Heading>
+                    {collabs.map(el => {
+                      return (
+                        <Pane
+                          is="section"
+                          justifyContent="center"
+                          alignItems="center"
+                          float="left"
+                          margin={5}
+                          padding={5}
+                          flexDirection="row"
+                          cursor="help"
+                          onClick={() => {
+                            window.open(el.url, "_blank");
+                          }}
+                        >
+                          <Avatar
+                            size={100}
+                            shape="circle"
+                            src={el.avatarUrl}
+                          />
+                          <br />
+                          {el.login}
+                        </Pane>
+                      );
+                    })}{" "}
+                  </Pane>
+                ) : null}
+                <br />
+
+                <Pane marginBottom={20}>
+                  <Heading size={800}>Where?</Heading>
+                  {!isPrivate ? (
+                    <>
+                      <span role="img" aria-label="Check">
+                        ✔️
+                      </span>
+                      Public
                       <br />
-                      {el.login}
-                    </Pane>
-                  );
-                })}
+                      <Button
+                        height={40}
+                        marginRight={12}
+                        iconBefore="manual"
+                        appearance="primary"
+                        intent="none"
+                        onClick={() => {
+                          window.open(data.url, "_blank");
+                        }}
+                      >
+                        Check on GitHub
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <span role="img" aria-label="Denied">
+                        🚫
+                      </span>
+                      Private
+                      <br />
+                      <Button
+                        height={40}
+                        marginRight={12}
+                        iconBefore="manual"
+                        appearance="primary"
+                        intent="none"
+                        disabled
+                      >
+                        Check on GitHub
+                      </Button>
+                    </>
+                  )}
+                </Pane>
+                <Pane marginBottom={20}>
+                  <Heading size={800}>Which?</Heading>
+                  {languages &&
+                    languages.map(el => {
+                      return (
+                        <>
+                          <Badge color="green" marginRight={8}>
+                            {el.name}
+                          </Badge>
+                        </>
+                      );
+                    })}
+                </Pane>
+              </Pane>
             </Pane>
             <Pane
               width="40%"
@@ -189,13 +252,18 @@ export default class Repository extends React.Component {
               justifyContent="center"
               alignItems="center"
             >
+              <Heading size={800}>When & What?</Heading>
+              <Pane marginBottom={10} marginTop={10}>
+                <Icon type="sync" />
+                Total commits: {totalCount ? totalCount : "N/A"}
+              </Pane>
               {commits && (
                 <Timeline>
                   {commits.map(el => {
                     return (
                       <Timeline.Item color="blue">
                         {moment(el.authoredDate.toString()).format("LLL")}
-                        <br /> {el.message} <br />
+                        <br /> {el.message ? el.message : "N/A"} <br />
                         <Icon
                           type="plus-circle"
                           theme="twoTone"

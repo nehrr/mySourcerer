@@ -23,6 +23,7 @@ export const GET_REPO_INFOS = gql`
           description
           resourcePath
           isPrivate
+          url
           collaborators(first: $nb) {
             totalCount
             nodes {

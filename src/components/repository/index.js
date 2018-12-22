@@ -9,7 +9,7 @@ import {
   Pane,
   Heading
 } from "evergreen-ui";
-import { GET_REPO_INFOS_SELF, GET_REPO_INFOS_OTHERS } from "./query";
+import { GET_REPO_INFOS } from "./query";
 
 export default class Repository extends React.Component {
   constructor(props) {
@@ -18,8 +18,13 @@ export default class Repository extends React.Component {
       nb: props.variables.nb,
       first: props.variables.first,
       isShown: false,
-      login: props.variables.login
+      login: props.variables.login,
+      query: GET_REPO_INFOS
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ login: nextProps.variables.login });
   }
 
   row = (el, idx) => {
@@ -104,11 +109,9 @@ export default class Repository extends React.Component {
   };
 
   render() {
-    const { first, isShown, nb, login } = this.state;
-    const query =
-      login === "nehrr" ? GET_REPO_INFOS_SELF : GET_REPO_INFOS_OTHERS;
+    const { first, isShown, nb, login, query } = this.state;
     return (
-      <Query query={query} variables={{ first, nb, login }}>
+      <Query query={query} variables={{ first, nb, login }} errorPolicy="all">
         {({ loading, error, data, fetchMore }) => {
           if (loading) {
             return <Spinner />;

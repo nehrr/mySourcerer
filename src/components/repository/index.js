@@ -7,10 +7,9 @@ import {
   Avatar,
   Button,
   Pane,
-  Heading,
-  toaster
+  Heading
 } from "evergreen-ui";
-import { Timeline } from "antd";
+import { Timeline, Icon } from "antd";
 import "antd/dist/antd.css";
 import moment from "moment";
 import { GET_REPO_INFOS } from "./query";
@@ -111,31 +110,112 @@ export default class Repository extends React.Component {
   dialog = data => {
     const { isShown } = this.state;
     if (data) {
+      let totalCount;
+
+      const collabs = data.collaborators ? data.collaborators.nodes : null;
+      const languages = data.languages.nodes;
       const { name, description, resourcePath, isPrivate } = data;
       const commits = data.defaultBranchRef
         ? data.defaultBranchRef.target.history.nodes
         : null;
+      if (data.defaultBranchRef) {
+        totalCount = data.defaultBranchRef.target.history.totalCount;
+      }
       return (
         <Dialog
           isShown={isShown}
           title={name}
           hasFooter={false}
+          width={800}
           onCloseComplete={() => this.setState({ isShown: false })}
         >
-          {description} {resourcePath} {isPrivate}
-          {commits && (
-            <Timeline>
-              {commits.map(el => {
-                return (
-                  <Timeline.Item color="green">
-                    {moment(el.authoredDate.toString()).format("LLL")}
-                    :: {el.message} <br />+ {el.additions} <br />-{" "}
-                    {el.deletions}
-                  </Timeline.Item>
-                );
-              })}
-            </Timeline>
-          )}
+          <Pane
+            flexDirection="column"
+            marginBottom={24}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Pane
+              width="60%"
+              float="left"
+              justifyContent="center"
+              alignItems="center"
+            >
+              {description} {resourcePath} <br />{" "}
+              {!data.isPrivate ? (
+                <>
+                  <span role="img" aria-label="Check">
+                    ✔️
+                  </span>
+                  Public
+                </>
+              ) : (
+                <>
+                  <span role="img" aria-label="Denied">
+                    🚫
+                  </span>
+                  Private
+                </>
+              )}{" "}
+              <br />
+              {collabs &&
+                collabs.map(el => {
+                  return (
+                    <Pane
+                      is="section"
+                      justifyContent="center"
+                      alignItems="center"
+                      width={120}
+                      height={120}
+                      float="left"
+                      margin={5}
+                      padding={5}
+                      flexDirection="row"
+                      cursor="help"
+                      onClick={() => {
+                        window.open(el.url, "_blank");
+                      }}
+                    >
+                      <Avatar size={100} shape="circle" src={el.avatarUrl} />
+                      <br />
+                      {el.login}
+                    </Pane>
+                  );
+                })}
+            </Pane>
+            <Pane
+              width="40%"
+              float="right"
+              justifyContent="center"
+              alignItems="center"
+            >
+              {commits && (
+                <Timeline>
+                  {commits.map(el => {
+                    return (
+                      <Timeline.Item color="blue">
+                        {moment(el.authoredDate.toString()).format("LLL")}
+                        <br /> {el.message} <br />
+                        <Icon
+                          type="plus-circle"
+                          theme="twoTone"
+                          twoToneColor="#52c41a"
+                        />
+                        {el.additions}
+                        <br />
+                        <Icon
+                          type="minus-circle"
+                          theme="twoTone"
+                          twoToneColor="red"
+                        />
+                        {el.deletions}
+                      </Timeline.Item>
+                    );
+                  })}
+                </Timeline>
+              )}
+            </Pane>
+          </Pane>
         </Dialog>
       );
     }

@@ -28,6 +28,7 @@ export const GET_REPO_INFOS = gql`
             nodes {
               avatarUrl
               login
+              url
             }
           }
           languages(first: $nb) {

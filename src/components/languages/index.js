@@ -167,7 +167,7 @@ export default ({ variables }) => {
                 <Pane float="right" width={500} marginBottom={24}>
                   <Pie data={dataPie} legend={{ display: false }} />
                   <br />
-                  Lastest commit: {latestCommit}
+                  Latest commit: {latestCommit}
                 </Pane>
               </Pane>
             </>

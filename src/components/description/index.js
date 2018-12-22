@@ -23,9 +23,12 @@ export default ({ variables }) => {
 
             let nbCommit = 0;
             const repositories = data.user.repositories.nodes;
-            let latestCommit = moment(
-              data.user.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
-            ).format("LLL");
+            let latestCommit = "";
+            if (data.user.repositories.nodes[0]) {
+              latestCommit = moment(
+                data.user.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
+              ).format("LLL");
+            }
 
             repositories.map((el, idx) => {
               if (el.defaultBranchRef) {

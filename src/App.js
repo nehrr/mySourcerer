@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
-import { SearchInput, Button, Pane } from "evergreen-ui";
+import gql from "graphql-tag";
+import { SearchInput, Button, Pane, toaster } from "evergreen-ui";
 import Description from "./components/description/";
 import Languages from "./components/languages/";
 import Overview from "./components/overview/";
@@ -26,17 +27,31 @@ const client = new ApolloClient({
 });
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: "nehrr",
-      search: ""
-    };
-  }
+  state = {
+    name: "nehrr",
+    search: ""
+  };
 
   _handleEnter = () => {
     const { search } = this.state;
-    this.setState({ name: search });
+    const CHECK_LOGIN = gql`
+      query($login: String!) {
+        user(login: $login) {
+          login
+        }
+      }
+    `;
+
+    client
+      .query({ query: CHECK_LOGIN, variables: { login: search } })
+      .then(res => {
+        if (res.data.user !== null) {
+          this.setState({ name: res.data.user.login });
+        }
+      })
+      .catch(error => {
+        toaster.danger("This user does not exist");
+      });
   };
 
   render() {

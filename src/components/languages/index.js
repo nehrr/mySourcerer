@@ -33,33 +33,40 @@ export default ({ variables }) => {
           let sortedData = [];
           let labels = [];
           let dataAll = [];
+          let latestCommit = "";
           const repositories = data.user.repositories.nodes;
-          let latestCommit = moment(
-            data.user.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
-          ).format("LLL");
+
+          if (data.user.repositories.nodes[0]) {
+            latestCommit = moment(
+              data.user.repositories.nodes[0].defaultBranchRef.target.history.nodes[0].authoredDate.toString()
+            ).format("LLL");
+          }
 
           repositories.map(el => {
             const languages = el.languages.nodes;
-            const commits = el.defaultBranchRef.target.history.totalCount;
-            const linesOfCode = el.defaultBranchRef.target.history.nodes;
-            let totalLines = 0;
 
-            linesOfCode.map(el => {
-              const { additions, deletions } = el;
-              totalLines += additions;
-              totalLines -= deletions;
-              return totalLines;
-            });
+            if (el.defaultBranchRef) {
+              const commits = el.defaultBranchRef.target.history.totalCount;
+              const linesOfCode = el.defaultBranchRef.target.history.nodes;
 
-            languages.map(el => {
-              const { name } = el;
-              languagesData[name]
-                ? (languagesData[name] += commits)
-                : (languagesData[name] = commits);
+              let totalLines = 0;
 
-              languagesData[name + "_LOC"] = totalLines;
-              return languagesData;
-            });
+              linesOfCode.map(el => {
+                const { additions, deletions } = el;
+                totalLines += additions;
+                totalLines -= deletions;
+                return totalLines;
+              });
+              languages.map(el => {
+                const { name } = el;
+                languagesData[name]
+                  ? (languagesData[name] += commits)
+                  : (languagesData[name] = commits);
+
+                languagesData[name + "_LOC"] = totalLines;
+                return languagesData;
+              });
+            }
 
             return languagesData;
           });

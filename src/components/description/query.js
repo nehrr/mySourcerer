@@ -10,7 +10,7 @@ export const GET_DATA = gql`
       location
       repositories(
         first: $nb
-        orderBy: { field: CREATED_AT, direction: DESC }
+        orderBy: { field: UPDATED_AT, direction: DESC }
       ) {
         totalCount
         nodes {

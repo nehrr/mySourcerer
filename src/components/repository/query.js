@@ -12,7 +12,7 @@ export const GET_REPO_INFOS = gql`
     user(login: $login) {
       repositories(
         first: $first
-        orderBy: { field: CREATED_AT, direction: DESC }
+        orderBy: { field: UPDATED_AT, direction: DESC }
         after: $cursorUp
         before: $cursorDown
         last: $last

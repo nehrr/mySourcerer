@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 export const GET_OVERVIEW = gql`
   query($nb: Int!, $login: String!) {
     user(login: $login) {
-      repositories(last: $nb, orderBy: { field: CREATED_AT, direction: ASC }) {
+      repositories(last: $nb, orderBy: { field: UPDATED_AT, direction: ASC }) {
         nodes {
           name
           languages(first: $nb) {
